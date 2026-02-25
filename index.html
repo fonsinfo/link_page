@@ -3,473 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쿠팡 파트너스 - 깔끔한 상품 모음</title>
+    <title>쿠팡 파트너스 추천 상품</title>
     <style>
         :root {
-            --bg-color: #f9f9fb; /* 매우 밝은 회색 배경 */
+            --bg-color: #f7f7f9;
             --card-bg: #ffffff;
-            --accent-color: #0071e3; /* 세련된 블루 */
-            --text-main: #1d1d1f;
-            --text-sub: #86868b;
-            --price-red: #d60000;
+            --accent-blue: #0076ff;
+            --text-dark: #1d1d1f;
+            --text-gray: #6e6e73;
+            --price-red: #cc0000;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 20px;
-            word-break: keep-all; /* 한글 줄바꿈 최적화 */
+            color: var(--text-dark);
+            padding: 15px;
+            line-height: 1.5;
         }
 
-        .container {
-            max-width: 480px; /* 스마트폰에서 보기에 가장 쾌적한 너비 */
-            margin: 0 auto;
-        }
+        .container { max-width: 600px; margin: 0 auto; }
 
-        header {
-            text-align: center;
-            padding: 40px 0 20px;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
+        header { text-align: center; padding: 30px 0; }
+        header h1 { font-size: 1.4rem; font-weight: 700; }
 
         .affiliate-notice {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            text-align: center;
-            margin-bottom: 30px;
             background: #fff;
+            border: 1px solid #e5e5e5;
             padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #eee;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        /* 검색창 디자인 개선 */
-        .search-box { margin-bottom: 25px; }
-        .search-box input {
-            width: 100%;
-            padding: 16px 20px;
-            border: none;
-            border-radius: 15px;
-            background: #fff;
-            font-size: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            outline-color: var(--accent-color);
-        }
+        .links-grid { display: flex; flex-direction: column; gap: 20px; }
 
-        /* 카테고리 칩 */
-        .categories {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            margin-bottom: 30px;
-            padding: 5px 0;
-        }
-        .categories::-webkit-scrollbar { display: none; }
-        .category-btn {
-            white-space: nowrap;
-            padding: 8px 18px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            background: #fff;
-            font-size: 0.9rem;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .category-btn.active {
-            background: var(--text-main);
-            color: #fff;
-            border-color: var(--text-main);
-        }
-
-        /* 상품 카드 디자인 (가장 중요한 부분) */
-        .links-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 35px; /* 상품 간의 간격을 넓혀 눈이 편하게 함 */
-        }
-
+        /* 가독성을 높인 가로형 카드 디자인 */
         .link-card {
             background: var(--card-bg);
-            border-radius: 24px; /* 더 둥글게 만들어 부드러운 느낌 */
+            border-radius: 16px;
+            display: flex; /* 가로 배치 */
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* 부드럽고 깊은 그림자 */
-            transition: transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s;
         }
 
-        .image-wrapper {
-            width: 100%;
+        .link-card:active { transform: scale(0.98); }
+
+        /* 이미지 영역 */
+        .img-box {
+            width: 140px; /* 고정 너비 */
+            min-width: 140px;
             background: #fff;
-            padding: 20px; /* 이미지 주변 여백 */
             display: flex;
+            align-items: center;
             justify-content: center;
+            border-right: 1px solid #f0f0f0;
         }
 
-        .product-img {
+        .img-box img {
             width: 100%;
-            height: auto;
-            max-height: 350px;
+            height: 140px;
             object-fit: contain;
-            border-radius: 12px;
-        }
-
-        .content-wrapper {
-            padding: 24px;
-            padding-top: 0;
-        }
-
-        .category-tag {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--accent-color);
-            margin-bottom: 10px;
             display: block;
         }
 
-        .link-card h3 {
-            font-size: 1.15rem;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            color: #1d1d1f;
+        /* 텍스트 영역 */
+        .info-box {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
         }
 
-        /* 가격과 로켓배송 */
-        .price-container {
+        .info-box .category {
+            font-size: 0.7rem;
+            color: var(--accent-blue);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .info-box h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .price-row {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 25px;
+            gap: 5px;
         }
 
-        .price-val {
-            font-size: 1.5rem;
+        .price {
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--price-red);
         }
 
-        .rocket-img {
-            height: 18px;
-        }
+        .rocket-icon { height: 14px; }
 
-        /* 버튼 디자인 */
-        .cta-button {
-            display: block;
-            text-align: center;
-            padding: 16px;
-            background: var(--accent-color);
+        /* 구매 버튼 스타일 */
+        .buy-btn {
+            margin-top: 10px;
+            background: var(--accent-blue);
             color: #fff;
-            text-decoration: none;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 1.05rem;
-            transition: opacity 0.2s;
-        }
-        .cta-button:active { opacity: 0.8; }
-
-        footer {
             text-align: center;
-            padding: 60px 0;
-            color: var(--text-sub);
+            padding: 8px;
+            border-radius: 6px;
             font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* 모바일 대응 (화면이 작아지면 세로로) */
+        @media (max-width: 400px) {
+            .link-card { flex-direction: column; }
+            .img-box { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #f0f0f0; }
+            .img-box img { height: 200px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Pick of the Day</h1>
-        </header>
 
-        <div class="affiliate-notice">
-            이 포스팅은 쿠팡 파트너스 활동의 일환으로 수수료를 제공받습니다.
-        </div>
-
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="궁금한 상품을 검색하세요">
-        </div>
-
-        <div class="categories" id="categories"></div>
-
-        <div class="links-grid" id="linksGrid"></div>
-
-        <footer>
-            <p>© 2026 MD Selection</p>
-        </footer>
+<div class="container">
+    <header><h1>MD 추천 가성비 템</h1></header>
+    
+    <div class="affiliate-notice">
+        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
     </div>
 
-    <script>
-        let linksData = [
-      {
-        "productId": 261192458,
-        "productName": "코멧 순백 3겹 라벤더 바닐라 롤화장지, 30m, 30개입, 1개",
-        "productPrice": 10990,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/zJ-k-AUyMS7cgNFMzP8Z1NZKM_CISY1eetrwH8DcsiLNmLDAEJkVP5_J0j2-fXr2zvE53MU2azVo0mopeC3Hl6-z3xdxW4ylX774lvFTyRhT6hxSbxWXNcCWWbBaYYTjMe7wR8f65pYdnJn-ypFqa87tKxA3SbTo2JLz_DZ1zYdTxUKCK908J6nIJVc7CEo8ETHyyZr1Nr0EHjTmM6Rl5KnQ5J4nLqLnhUtuBUfwCWdKgTx0IVbW8IPvd40W5w-PBm9mW5bh28Zlp48vTuHBKH97LjeYZcO0Fg24uO3ENEU7fvZ1OOwSj2-QpQXydLUr0qiuET7E0y9dHSQFtDrM8oZ1Dfm1sKSHKKq8-lWK4jmbLinMWdQaSHqkx-MuNRbx2WzV5iLh",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=261192458&itemId=816702952&vendorItemId=5077941266&traceid=V0-193-5875e3f7a89a609b&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "생활용품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/TdL11REp4GjNxFIpTeUriuBSHRxKksZ81E94L5DcC30yxh2DYd-rKZL2ajd2xmPxkKciV6yyissWdRSls7H3NGu8DQKbKMsYbox3BKw-8VD3w98pMOqPZ-wdsDeX8OGOlFedrHQqGCfB4nuHEOGFibUhFQW7tDssgG_dLJqx9YUzTCPWmXkfbwk62-4kk_0JCwXTeSCF80wgAXZb-L1xMqvH3deTXu4nEKITOziCx-qsxo4doM5tfDnLaTa-Yk918gosQ2bnnw8BGokQoD12Ci2v7CCpdFTnKz1wLth4cOPEDctJqouTtvZde2Oz8BO4bpgnQH8k_jLV1DnZE2u9zCj-1tAmNUUQr5fKwawsK6vRJ0vRUbk="
-      },
-      {
-        "productId": 8548508229,
-        "productName": "Bebeen 120 영유아물티슈 캡형, 50g, 120매, 10개",
-        "productPrice": 9900,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/8qZQTcGQaEq6Q3f58pERxJVtiNNgUxX1kOJPhEjaO0jaX82Y5e-E_JOetLcHreXHo2t-DadhYjL2rQC6paC-Ixmv-i2-nO-b_cfbi125_1NARKXSWHOaRPzqsZRcooThGhLGDNRHlmmcgheG_Ea7PQ33B1ZncPLI_lEz1gkUG1VcbgSMoU42oRi90tlHXW1y1t45NZPzeAYV0TQzN-GBglz6X175l_CtemXZH8o8aOIrogqQ-4XZsSVVAXcqfd6WagffnPW5ifk3m7WFnLd4o-v7vq75VCcCa0ImSDvss4YoLDtzEqXQPQuT-JNnTFxnWD4SQYJmr2d75HyF6DcXZuAsOwMcfaXWTqYkJ0N8rmpERPMK9fLMKoP5owhy9bP3AeMtloCkSTiJuQ==",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=8548508229&itemId=21436080703&vendorItemId=84095676789&traceid=V0-193-ff37ad35591c9c7c&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "출산/유아",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/25qeWDMfbeLwUF0J2312AvcyRpT-4g36KyX7WZlEJMFp980QGrA7QzPs6yNsy3y8OpDzRMnLX4Le7Y5FMDIhFvn8sD1Me0vGnGeDClIUPJe8ltAWKTgaCe-JhTdYXsDk4Sj_TMwkTjhiUwmW-2M-JwdlaMM4xFzCxOz_RGIdVDvUyrGXqPZCl9ScJI8BZBVR4Wp2tgNJLWQ-WTnKB_BSvtM-_8EX4ddJ-UDT60C1LHTGsX_mOTB591GTLqN4N-to8Z__3Ft2CL7b00DZOdACu3gHCrrJWXVJ_eHLY0Lxce0BI11Lj7LSDCL49_qzD8BnWsB3PJWd-9j4Rhg6FQW0kvaS5Oq7UndVwh1EPeFEQKgYqapropCViwuwJg=="
-      },
-      {
-        "productId": 8405380866,
-        "productName": "원더바스 리뉴얼 조성아 슈퍼베지톡스 그린 팩클렌저, 200ml, 1개",
-        "productPrice": 15900,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/d484llm05IeRTba2dwbj4ZIcMm7kYuuM9E9M3gS5HP6ecHO6jBkCDROC-E6RBzs6TJLGY1_d7W3uNjKUuthcrzqiThA83z4JKk90kA3VpMI0X5H02_ZneVQkQ5IkFTh6LZncKlD2KWkd2QZmczLWV1lT6xdPOxOheI7abi-tkTqMljEsglfwOkcfB0wtZrhRdcRjww7-zedwZjZ6GU7bT9rOtBPfxPW6YLWmT-yKITYgyZJ_ZOrqhasPB69iEjXyQsXL3QYQ_ost986R-XHcYwIc0ywyzAH-JgqlH1iuNUIxeI58yALCm-Qe_5UW5IGE4zp6zst22FVulZ7-c0P-yaIqle7qJpiYALKtTgvWCYT8BTeCqv-Jc9opVx9F5V78O2um",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=8405380866&itemId=25683356521&vendorItemId=92672659814&traceid=V0-193-10caf332c30daed4&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "뷰티",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/KM58CRJyCdrN8S2_KHR3X4F9kQ2qLFr8zSiqePGS6tZ5y44fhFyxZXxCXZkw5zEs2R2jIIOzSCKqy8SGO8rzKtD8KjNIeqY5gRbtztXlXD3cWX2nasXW7uWO-Q5M4PcgkOFUmrvZjH0yq23pID7GKcczXPYg84ECSFT-6c2_Rn8-HhMf77QFEYDrhc1lGVc-tusMcryPdqwcYgIjUGqLhMN6AUD6dp02Anf1K1mji5KFpiSvSVWRkZiDTIE1L4m6fdgeIBDioOQexixroBcxyHwDWzSLE0PupidoooVoyz0-YtOqpPfpye-F1_U40cNvHIpgcpiwH7MPFdKfnRHZ7BkPFiIa53Db7Rbd-9UmOOCEJg0="
-      },
-      {
-        "productId": 120358812,
-        "productName": "자이스 렌즈 와이프 클리너, 100매, 1개",
-        "productPrice": 6740,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/BFpNRsdSp7r6-JmXBE43dAHaqVg4tlVNSi8UgyuHqZlmcNPsApK-AsIqdfdOoqCaazRkE7u3S96_iL94m0C5pkaBX7mE1LZPIdR83Iw5JMsNe-1DfyDIaVpx1rV5Kkn7Qz9aXl2UNui3rb8ICnEiA61pWMd9ba-YpQfZf7d90854tOrT_iOK91hYHvwMKh_-RKwcnoWHd8z6Ojo7HICoHYNmy8vP5BROX3TEH0tTZR2XoEAIqrexmaOZ9RNrPgqjK5Z9V5QAqmnnx8F9wEKJXrp7xqPNnhELiGl2CKxo_dZVELVEyCvCtfuWIWYE1GN961xEkaP3UEc_G_sI7s3ArX5vvB3TYW4dCtge6Xf2iE6sHPJa4Ftg2AD99OBpG_3qUy9vZsOjGP0D41iZc8s8cmigaabehQ==",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=120358812&itemId=358237581&vendorItemId=3871909223&traceid=V0-193-1c6e00caf7afb220&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "가전디지털",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/gS3Vp6jSTs6KsuRtgXRibX6GJYC0f9QWL28hpqeCBgHAilcAL9OXqJkQ6BZjMYPT_WLuanuwwUZRK89TGzl8WU1DjImkLyJbCJK7AIa1zSjAIrWZYxPG8ndGrXdNuSOBptjKzeVDc93XsrsWzxCDwg7FT24zU0Qp-VvwtjvPqzaTexthJNhu6TDO15TgDMRkZGlCOkL1_AD1bbyGhciFWMy7ZZBIFWYwLebbpDqGtraovWJjkU4un1rOLIVI--xWlZN020qHRPXQtGaEzUWKGr1QyJJj5XCLVi8rMVApURvqZrQlfDC5M2hgFoEWBcmbQgI0vNdtkD2EP5Witopf4Bmo0PYm7ZLJQH0BBk3arDPWBQDPcHBtfGq5yEKNVIlJXgMTtYlc"
-      },
-      {
-        "productId": 6375150002,
-        "productName": "코멧 홈 차렵이불+패드+베개커버 세트",
-        "productPrice": 24890,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/vg5UkXVWJ-gBDZWPvpvuaUzhEWPF7qu4A2xZRmzeepWH06J5qZM0XZpEp3xOv31vHMrH7t9OXERUC4iaIbSk2NNx421I4RAO06QE6rFqTcEGPx6rsZLfbNX_3RJxmpYbFAvu1iiuDKjKauZDGXIzuN8ZwNAh4FKLnDtjCjyNHadc7n9Tdn1SfU_THQB-dZ6mlvQI2C3AwDxL1l7X9ijtHfBHHW_WfMXbsBOa90sznR_OARw4AouzifBfaCLGxvVQacSQpf0vHLOYXE5ZKreeXIc0MIg-_DNpMqlGhJ3Gt61mxf9XrOnlgM-x324ezFJZCCBoKHzhzu6S_3KBFHyqQbI3keDoJik418MRNzQ_hhlgcVxslUt-WQQDfIo7Q0pHmCtBRb5UJEEEgZod",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=6375150002&itemId=13519738960&vendorItemId=80773701874&traceid=V0-193-476459c508792482&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "가구/홈인테리어",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/2LpoJOtwB8fgPA4v2FXwJkdkj_-jBU73w7bepC2hitknGdU2m5o5wmgZHHMNxoIQcOwWZpsicVS3LnLUf04Jzfme2Qjy_dYGlc2CMGN8ojAsHrOnWd38c-cYGiAeF3ynMh1yubUoG4IHMKM2inXWVt3bpuxBcUC6th9PnsuksD4VDz2QJykzc9oDtksNKdeRPaSStmqiSoSl_x2bvmZD8XV6em1YAPiO7KMn_m8jui-cPua8-u8uu06q1YzaibjMSTlYjpjQxNVCJR8RFonRE3Sj8ykGa2z55vlzK7rBkVUgME7nO-lP-k8yAo4OZ5MlEv_r6fLQRrdxaBR4u67Ieh4s9cDCotup5B61nZMw2KqWO7KwUibvkm4nQEc="
-      },
-      {
-        "productId": 8449982562,
-        "productName": "이노스 FHD 삼탠바이미 스마트 TV + 무빙거치대 일반형, 81cm(32인치), FS-20, 스탠드형, 고객직접설치",
-        "productPrice": 228650,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/x0_I9_BErJZCsrlUxzKCYSItMTVEPBP4GeD9UJFER52soJKmRvZB-A2hK9uZzHehFWpzuf_KMuqNhNXvpyuDwVLNiMVT4z1boMbeeizSeG9nBMttaXy_6jCFxc1CdLW804l7eRijm5sNyovP-aBti_hq13vIhFtCdsLZWmbsmi6CMZFWrYLEQNLCHQCjUS13ySHAtotXJj-0K00eGgn91HOqjCbjl-JFfidNNH2nP8qWZ4UudmrCgIwfv4XxiMXqMYeIOcrJBNubv7ZaS9xirmj4MUuxxe7tc2_p1q7lnB1JiOQ9NuuPXfdtYlOJq92jD4AOL5j3PNvMBIMowd5O1kWCo4oUBfZ_1-tB-gKtmkq_Z4dREkyw55diclauP0qUDOYCoJnvQ9Ev",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=8449982562&itemId=23110142651&vendorItemId=91050837711&traceid=V0-193-db6559a2d2a20f73&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "가전디지털",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/NmhpLN9SNvSQpT9nNoqEc0sADoTjs26san-L907MZ8Rz55rhGTo2gStGaOGdsGOCdP25tuVOmA8AI0F-Kb_tj2NcpuIBOs5rOSLC0hvo6T981BvfrojaUhHBlmPJ6Pm_Jp3wdmoCUSLPyjt1BirfE_xJLNbYYjjtA2_W0LbWFtzh2Bcki1xTLnr701YiGZlwzvLPQeqHVjOD18wBRvsbhNx5WVZVpM7mkrOAGC5f7zyJJdaGcNygxnbPeFdpMS8fyKhdVTH886_dn6uK_5nQKOHkynH1PcfAn2KryrbZ64-_Y1j2Hii_1LaBjf6ig3uh4RoUOUtEf3IX2vQCtCOz8_wRbkctBR9zksWZRcua8rJ0_YV9hX8A2P0="
-      },
-      {
-        "productId": 8584790719,
-        "productName": "떡미당 두바이 초코 찹쌀떡 (냉동), 40g, 1개, 6개입",
-        "productPrice": 11900,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/ye_VlUuABrC2ngecyY4mwLD2_LZT5IAd1BkTH6YHXOQqrJ6rmJIm7Xdv_U29tCAKxU5iSgv_bGCvwQ73A5GPEBfXBPKIox3MyM72ieCKYykfuRhlBmcqzdpDsEi3U3CpKXBCIDVBXY9wN2bGiUhOsQRoa-1tChZymxek3rp2bUg_gIgaOCMBUP9Fhl-adWOyBkobc_RZaaK8qv73RfBY6ymP2Fubg5jTPm4NuW5yDWYhBte9uSJOS-WBZUJ3nkY44xmahayE0H5QNCLZqtLdgng9FOmBZU3DHJlL55-4wf8zpVPAW0cvr8um5pQp9fmFl_sPjRmqz0xuSfNjPgLpVLg7L0z5jGNJyPzdJqwPC7_FYq95Pj3vYAZFg0wQnbPOJfn0",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=8584790719&itemId=24886625993&vendorItemId=91893317844&traceid=V0-193-70267b6a8a91b352&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "로켓프레시",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/_OfLHJArj9fCT2fu_M3DCn4tHhs5ZtKobCd9ZWJCBWIa1Ihko4fptpeMmhZA0_01dgrk6DGt4S6MGoBbqi5ZtwLeZ9Bv7L7pEfDsg6rnhY2jnJUTLTHyHEJcF-68QtLxYpcG2FEURaFEq56npEnlWzH6uH2WyuEcMLXWyD6RDT7YyevHNIEvIvf_Hy4h4Q76DPddbpytV0vFdL9lOT9NEHYkqiNH93D_xGZmYXOxzOgNJpUW8XFZUDkSY31Dg7BwMsPQG1BPDccylXDjQn51WBnN4Ht8vj5ZeL7_bdM-X4BOxdkkuqa7Zxzh97BhylsFbTIMZ__dOwS939pdQPKVp_jf3Hbpp_4Nw4rDK4juou7y9kc="
-      },
-      {
-        "productId": 3721932,
-        "productName": "월광 미끄럼방지 욕실매트 튜브형 150 x 90cm, 회색, 1개",
-        "productPrice": 24560,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/QHn63yPZ03kc-ct5QPSdqCSg-j01gy-apEVGkjPPQxKfDsBxwXnayZo00JfvI_AdPiZtzaGn5Gj5tAB7L7bRFdSvf0noAz66FA3-2-XYx35_pUjqsat2UI8WJuEhukfKD7yCZt1g0ouH_dVeiiX_cJ9ajfU-gtcz1R_48KpTHFK38PaXNMUYgLY2SYdm5DEXXVDVkPRs-BIRxNPFtD5ifrSYhRQwCPJNjyIzKf0yKfoatfewKyZUt9obKbFyNEACg4SF2P0HxrUVi06M2lC_97QZf_jyNAVOSss-OE1dMfQMtYmUejjlZsjZBjKS_L9mARWW6NiD7TsjFI5NyCQzaeMZJnKwVpfP99Mrjy9bALIDLqpwoNHhcPjVYeQ40keQh-6CN1oGK6rQNnzF7Kfohfh9-VGT",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=3721932&itemId=18344177&vendorItemId=3026978900&traceid=V0-193-a5b6e2c2b7204078&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "생활용품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/SHetgDVJKO_vZDSESOeZb1AI0uuS3VVU1hyFcQmvqnMuVx58jAt_XDhYKw6tK4R_uokCGJ5c4vwYdGhfiUA3CbRt0Ijss7ZKKOQCjQZ7Bv4qXXs2sBs_JaQ99AtsZLsH5Fyf_0_LdwTi6nLY7rVDVwofPlt55ErJeQYXSkot4phqVPo0c5Hf8Td6mOJ9viyEpCr1ji4lZ9Z0COo1FIrObaFgQasX_mtdvgFVwkoJyM9iaBeBUvpLZMEog8RMC9rcWmYs5h_m15eeI3xEEuKtaryVkAQ4HLJTcKiTM2GhZYkLfszdcMwuyF-lpzderS_jPG5UKJmB2AR5YdHeLO7tPrVCOnBNEqljZ7maxX6UzNEzywuznI2cmsKFzcpmPppaAa2qeXQ="
-      },
-      {
-        "productId": 7615025847,
-        "productName": "루카스나인 시그니처 더블샷라떼 커피믹스, 14.9g, 50개입, 1개",
-        "productPrice": 16700,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/pCsGFYmVa3gQseeFpPurIQtOLb7Jg7u_5loEre1Mcq7WDud0vARkw3mJfB7bggAVSdu6Kmv-NdyQN367sCmZyQ7X_pGwGy-ZtHx07cQZlYz2fv5eTKqPqjJLMrcjgbufR1aYqOG3VrWdmB6p9X2LQXz66hYmop1Hjwdo951ywoPHUCJ3RJL2AMzoEvLyMRvPyPMSRhlORysBvZTeYOdPqnvhd0iPiE5HfW5txP0TEl5VUyipv9pNi67Sj3E6wMM_wPx_iB95Xxpj17lycvToTrLYgUOqCAzg3LL-Jk88NyCrkWPPapOQqewDCQCD2MMaGj2AtauWdbuVWhFsZC0qpn_E1Hsx4oVpk8ej7ZIQhl_piHw_DWRJU-_EjjhcE_rpwSC2waWDKYlAqwo=",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=7615025847&itemId=20176600824&vendorItemId=89833520260&traceid=V0-193-66191301155d3c2a&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "식품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/by05fskJ82yUH65Tb0z2JguM8DmkcA8RzyHCpm18fo4cQ-ARIYyZiVAlAlUF5un8onqjqpViTJypFua3CM2kBPThUxIe_Q0V7E67vGPf5CLSov07XrSBTahQefugW3bMYBgwtYN08icMcRZqktAffdQ9DjBIJFsp-rvrK7XlPHkcsVM3pvx71MeV9J3AT7cyF08kYi64YDoh0FME3MYl6W9UOp2c9PGwTQkf7NIlytr8dDNzpr8qbAK3wclUWtbgaAWztBy_E-Jt-ZUA0MI_WjW-4IXR5nV8cSOO3v5VaxlNwDSqeLqZs-DCRIfUTJqevok2bl7wARiYsTmVv8cRWn2fit1Yhb7bbcWKaT8K-BEFRBHmwd8I0QjR5Q=="
-      },
-      {
-        "productId": 9317503540,
-        "productName": "네파키즈 쿠커스 운동화 NE6SS46",
-        "productPrice": 49800,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/8ivU6IZoeBPDrvi_8h-CywJMEp9p9OOkB1AwlrSYTILjfIwh1PKO0aVpPOUCWv5KZPZk34QZdJLRIDmOO1t_G0FCptqEGA88lmODkJqyUcxIUp-pglT_MhH3ypEiW8JkMHD77JJxrbjOCrpZ5BwKWaHB3fs44tsyF7VCas9OWYiK_pgX_XFu6EvdLD-_24so9n2-wbMHW0b56BTit1m6UxF3OOsQUZT-0XGOeyeLRP2c6UaG53sPMvRCKBb_6JCh8xSlxcHjiSDurSgoA7e-3_QuPmcDcORmnAZzaZ7bXJGvu75MdQaHyBN0NE-J9M4Zis7rIId-h-fti82F6WeQgyClRu6WYqWEu5lLyTtkQpVeW6KaxSO34fbVTc930aZblVWE",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=9317503540&itemId=27613055391&vendorItemId=94576186288&traceid=V0-193-debaf36aa75f0910&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "패션잡화",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/CEDVz8GqprraGDsVCNocanb6Qz5YOOZOSna9Tf607XupAH9hJXw-WkstQIKDwRT2MoNDAyXHGBEAmgQkv26_pT-TiZL4PwjUMTYxdfqH5B3rNraS1Hns5yqyn5T4xAf8YJyPp4CIhRGFgZVaO0RXFPd1sTKOzASF_4uj6Yfmfa-XRcVX6NoJw-Iw3t4a-UJhvIahZaP9PxFDrWcKtlIzt1AY8VU4bT-G5LIqKUUGGpVq0bntn-kyg57EK6LADQYLlEWkl0eaOY408qX5CZLO0rCVDWqRKMMky0maTjadIr0HRgz64ZI3gbljwW-xA05IPFGZCM2kt429x6MK0A-qUOk1NXXP3OUpYF27F9812QtTF_M="
-      },
-      {
-        "productId": 7727988637,
-        "productName": "스웨이 식기세척기 액체 캡슐 세제, 440g, 1개",
-        "productPrice": 10500,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/6sUsdvLc0Zevd8is6gONr5aq5wmwr-2oRfBxd8hv2mvQ1UCufXibdfwDri4RATyV3s6hv8yccEc76gCiaado_Y1rLWc7uJncIsYydE1bcblh0JeFp-TZjlQzQV9HL_NssHx23FeyvEeaC-GWCAv-4EMEVph3uOhDShGlewdjquHnpRjs8wYGHFXaCrfByoFtZi7j-FnCVTZMz7HvtV6MTUm_W6DXXLs3pZuft11xeaBs9x9J7ua9-UFmB7JX8sD7atUKKsfmaZS1C1tsw8UtKq5r5_KIyood4D5O9mShDNTvVOTc8U_bnqQst4o8BmrI8AFqTC_wHACvIY2gzZwgMt3xKUC6QtY5ofuFgBzZegLNZBBlnIFpALH64gKDYO06EVxACimWB0g=",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=7727988637&itemId=20758442517&vendorItemId=87828658979&traceid=V0-193-d25b4a4106ef0587&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "생활용품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/PEp9_LXy32cBpgNgPAX8GBYp4YiYRVrYJTdGNqEjDtwfxPUMa4a6flnKpe2atSsRXZFfPyqB0cy1PcYF8O6MU_yvTlwq5rgcgJ_Ocwo4b1zGDG6CWwNVjKEyAqyal_qYUlMu-A7Kg7yISKeVeAFp_vMN6yU1uecHyOsKSe6uCrZScrMSs9X_dzfCHY9cjephmPmSUdNMMENef8Vyr8zMxJItptbehsNAq6LviSHCr-_sWiW7bAsjHbPabV-CvEfGeY0rxJfRx7ukMYyRn8NT1ofSAhkenQZyTZJKv81Njmn2A8ALS1TRYvVWgU8X2f8GdU6i4kUhQz-98Wvd-ANCM1dNwchBzHe_OnGBHH-i2AWtQzJs9YUP_g=="
-      },
-      {
-        "productId": 7936248000,
-        "productName": "오비안 모던 규조토 욕실 주방 발매트 대형, 베이지스트라이프",
-        "productPrice": 9700,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/b7hplTv0M1gJ0tucb25LoghNWvTFGRgdj5jZadAwoTjucyif2yuQo9GC_eLM564Y5431S-oBZkKJPEuqV_gN8F2gvLQPHfp7YCNDG4tR_ifN_siKm16lZHR_uR7s-RUfLZ85DzNBS41MExy8N_f9ov199zaINk5znDF2NaqvgOoKe0U8Fzih8cQ2FyZu-C57ZPB5lpC-prNcl0IvpCrXYL8e6QodP9I16FbGqDrmUH4KGfUgE4Sb_Q_-JstkY8MNdyeGoFWim4jmpVMQLkuuodmrZvGGubpTID8Q6OW8BGcMjkuzPwHPnrDanA1iGZP_ugQNx56YIziOK7e50q1cYf64OqKdrR3v3GzV-l0C2e3l5pMyPbKUaR13g-iQOiiK7iY1auzUjY34-jQ2MIRAXUhFk6Uzv406SmIC",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=7936248000&itemId=21968757303&vendorItemId=89016449673&traceid=V0-193-367ab605d7d391da&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "가구/홈인테리어",
-        "isRocket": false,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/Fl4hernkmBMUTnLdFplvVmKMHF0_FLFvzgrx17fpH3RQT2Oscfq7jz5ZZ7XwBWJeHmNycqRvBXurM4zjKbaPvy_hoWBBj8e20GpnZiKNcRaQP5FwOYR5yuY7lmiQf8ay8zuAEfRsLLzetqtPsUL8Td6ds5bE4o4D6pDiBGhBmMkHK6UB8MVTgIm4EkFuB2-9z5Kjo8O5znO8op5tVb7M9Aa6g-PK_jw8eOzgjp_KvggBD4xJvaCi9i5PKFNio9rNERVgBIIxrQn3fDee00-HGTUuUjGDnND7ff7v0K9pZgC2B2SLQbjszWfXsfgZROZsmjGhAVp6LcIHBEqNcV52O1zz79d-z0iu2mOqqiWFK30uw2CvQKhoJpCitKWcS47O303UY68q-Epzxdo="
-      },
-      {
-        "productId": 8405640997,
-        "productName": "행복미트 국내산 돈갈비 한돈 찜갈비 총 당일발송, 2개, 1kg",
-        "productPrice": 30530,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/7kIywL8IEUBRiza17i7_qM8N0OknofUGXVmIVZ5nYW18yrHLqYjVq5gHdnVlJJ4Q8cXlzxvtMEpTL0SykC6TLXwOL7XePgwQjL22Y3RlFCiBH8I-9GTkR7J4hc2jTQ3gB4BvwLdO7JMGsP9Baz_LkIxlmjbzwj9zKYbgozor9RNkQW-yZOmP-7fxBAfWAopNFmdsoc-PEtp7sEGYuiEXObxdPDP8IraVRrRMH-qUCty6qqJGA2X2unxp5S_XgtNIyCHGOnr9nZN6jjzcTOUlRa8KK8JvOYITlNLbxun-HonT03fpQntilYjDjUi5UUCnTmN7BK51yC7jZ3T5JF_cgU9prqjQnVAuTieJlitA5oiiTG9bI96iw3k2rrj0uASJq7TfwyWcWkKQjrGsCZg-L_Hlqw==",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=8405640997&itemId=24300790085&vendorItemId=91316733117&traceid=V0-193-5933ff68ef46151c&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "식품",
-        "isRocket": false,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/I240XscnYN5Kj5dtI0C8dxEwCPxfLQ4RcfdxAeBdTX7QO5MzDXhfaJOqnWA4IE3BU0pn9FSOMATkJ7LmAvv3PeW9fAENsmntWUlHX8YG3vPpN5EH-yddJaruTMoJP12tdVSTo9IA0CgkA-ZdxRgCuBdDToQ5AaenvJPFHm0U4SA0wGztl4uk9n3YxMkFeN6UdEIkYzwpSqMgCmrCnWJbyy-0ZSrCzznS3jnoK_yTru6cNLUEPAmqELWXCDhCl_RWwHsq8kICRr5crfFzM06US8YTNpu0ozD0uaumvqZuWzaIxZWmw-XDLX_V-HcR7PmVovWg3wVaw-8E3ly8kJlVMGil9Haqz-zhXaW3BlQNRU0sgUlIKZg5OBmku-ddUuGgL6Nt"
-      },
-      {
-        "productId": 7867931216,
-        "productName": "계란의정원 킹단백 구운계란 대란 무항생제 햅썹인증, 60구, 1개",
-        "productPrice": 17850,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/kPDtaysTLmsNuJ5_kIxOjnoupusQaPB2U-cO0wFPOyTTVGeeMX4UnvmVTgrZbiXfUvQqOaYgeJ5ixrAm552-dEEepdi9xqbUitBKo5T9ZrmUAPOzvRqREibX2Gd0V6vPiLktV6sbBGKlgnyPfdHwfnj8AdeGqwPjrmYQkkLpGyU8KpTlISTWD3QLJCAr_o7SmfuFuKqZVo-uLjQTU733bpNSbAOsxcbI2yP36-kJpgBGMs34vYp8yKhz1flyESKkfLDrGu-f5nnpaHZKAoqYhz3Latk6tJe18qRIw82e4uwLs0enPYhIlCEP15gJFD_of-xm0V6itqfzma5mHH6EkKaHt3fiCuVqw9v-q2uZxyHjLW72i3AWUAYUGQtuSfwtc8dPerRdpyV3Fuj2zKHWErihaQ==",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=7867931216&itemId=21485830230&vendorItemId=88539928127&traceid=V0-193-9b8d0766c0635e8f&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "식품",
-        "isRocket": false,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/eqiqFj0xFt80gcB4enNq_n71RmTCy8FrdVk3jK28BkhryAr6HrLo1uzqY0pYK1i-P7Bim_zV3qB3KR5eVnze5GeveIekjswOI743MlqofmXQ4qxltAnI3AmMlR5NP2l1n6C9N9NSc-woRp3DZO_3xYscol1VbWLBuxVHnjynGhKxwAnzw-YOm4mKF_QElruXAzs0VxeeOUKjgJuxNZLVQPUR0se8-VFUNZF_WoF-96qoVma3eSj1i1GIxNA_mpuj5CBYkQRBL_Y1Sm20i43qw8NIZScGGIutkni6Yw3s8CNMFa-8SOu2NsWYmmjfkQ88rjsXNMMovC4eXwQCdnuOXYkd5SAroTXKZ_FoN3Vf8RXUJiMb1YXK8ktiePCJGHO3aYYQ"
-      },
-      {
-        "productId": 119465439,
-        "productName": "상하목장 유기농 우유, 200ml, 24개",
-        "productPrice": 19460,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/3dqm3Eer7U7k2cvT3e-yoOWHuVAK2O556G6bQBN6yo6pz01aGSJ6Afqo2xszKYz3qMxPcAyuzSYH5bR7LZGy6bIbaOkukk376R5Ed82b0xKNIDfYVDIWyhn7t7-HQdlehFsnQvv0rtdDOk1FPbaM9T3U16DR4Kr94jLKD3y9-KTrSuvHPks7re4Jr40JD9SwXcZbf5PzPflv7pJuy7PKhPtMU3byRbk6_wZXh2i5Nv3lOk0czq20pzyufFqu1SUdGgpRDecOu28jIYp5SDa6q9zjxzMmXdHNEqvLsg0OcDHRo9RFGfkyYNCR1rUzmMUNheFT0fUiEdEY8s1CKgfCinI9p3ocLjLL6vBqIpuUHk8yaPQ7BJrAtig2aPxa3vYD1sUMKSjnXQ==",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=119465439&itemId=15483078094&vendorItemId=3000244423&traceid=V0-193-2548e2e6dc53f07a&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "식품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/MMPyP7Kxg6CP3tICMLDlm7MChMxQWVrkLr_MUdh0sHc10sfwnstAVg-U3iRzr6Dycnz-x4aFjbZrKAkT4xo7PuFVFlV3qDG3cMzOQgUpiVHYA3KU4bPX6HrsVM9xBgcb_ddFy_9sdxTPOm071PTosB2XM5-0z36IfItZJl-uQSsmnDFah0xPJV69aUTH5uluGCb6TllqphIwRFeaa69D8Mt4ylUBg_S6FNuABniVLNaZT-fLdUT3x6QdmSSYNccm3hBh99sUnX66cH_8kFndF7r4SNOXMWVtaFk_UI0hf2wWYe7E1AdsZuyYcxknMUD1Ug1cblS3IRvByj728UUnAU4frcNkMpzH1gYz7BLyJdxfrXX8BTXx"
-      },
-      {
-        "productId": 8674836894,
-        "productName": "곰곰 리얼 100% 땅콩버터 크런치, 230g, 1개",
-        "productPrice": 3950,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/WTk48xb_wYiNXq6vWY8FUb3LkFmi8wbuvXeIKnizUSZARn86stgbJpR9n--ELZI3q6F6DbM49jCU6CJ6y0iBvcff7KL1x3_7DQTWsqtNHyfduPdMzi2oo9YO1o-L9XhcvQcEyT_SiO0p8m7ZYiXdZSS0uPfBvTixPthXZxwSFMfKsQ4DyglN7yy0vPhzUQiQ4aM9fHCEAb10ktQJ6sln2Y7IBvO77W8xr9BCMApmOQgS2IHUaOCKiGREsD_6r9O7Rg8SeLCBFtM9-pd8URM_mFzgXvD2VVgV9UUTOqvFptcmFui2kKKx23yIfJje16VECLxljIELDM2SWsFPrUM9XdtPrYWzo6JYMk0045_nf22qDw2rp9lU6flYEmsy1QSIUW8=",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=8674836894&itemId=25182902500&vendorItemId=92179772118&traceid=V0-193-c32a838af9bfe7fc&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "식품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/JcpBpUCZe156PiKzJXnXHvTs1uaT_Be0A_17jLKEorcSla9H0uOxi56j0LFnCRzZpFXalsmKVITo8whirb1frKFZHkCQzhCOuOcLDSEXtsRAuyUokiXXDjbSR21g1NUwz6YwdzEZGfMnEB7IqhS04b-77sQuAQujIoe_8JHlBxkH6S8u-R1rjwjrKI33BjOOEdfSvowcBwWbl_8xrPG19zuVUCOU_GOWGEfkTHV0QjxjNDx22LpywPvBRYkg4_8wirylD_PKxg-wE-J6yOohHnRQoS_3PmRLu5_OBGjFDuVC-de1rOBNXtBVZdMY__faHq1ZJ_fteKEb1DzKK5qp3WhC9TlI7oYNJUQzBHOloDlPGg=="
-      },
-      {
-        "productId": 335811322,
-        "productName": "코멧 이동식 틈새 선반, 화이트, 1개",
-        "productPrice": 10990,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/H1KYZQQ4-soNsEJuHxsPXjM7sLy3arMBh2cC9nOKelIeClpbGpqMXuhSsIOYd4hoR4KXreNMp3XIteljWAdH4HVuV4kV_aZj6by2PQZP62w-YlJWkRdTmU8XHHT4H3AixxFvcKTsOIpwc27yjbOBftB9M8jZpE0jL_pXyIo-8C2ITDb9NMGl4c5cqtxLsyglHUwpknP6BdX9cjInqSsTddU63y5Oj3X0jI806bz1L_CmqbQN5OEuqL-KhucixFZlgEOJ7dR7hBwh1d7c9J8gIbHhpujgMe5SexHSpSIABhHQ6cTN5PkHkD5QcY13TPtUoOcBMm3XapfI3WI2CfaOKNc1mj9qSKR4Q_AqZImE1k-JmFLluMrs1Qo7ugo74YmqLEeBzM6Uww==",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=335811322&itemId=1071522108&vendorItemId=5561687320&traceid=V0-193-a8aa96a888b61243&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "생활용품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/UD4FoFX8h7GyQ1I2UAh3zKI2OixPDir1vShdo7oJLuX6jwVYq0dOlOrzfsYSnYasWNASEoqseo4YF1Cnsh1E7J2vJcCYiigC38RARCY6mIcLGw0Cp8zcDmN63bmz-61s4yubrwH1zDJhfIaAjEeX0bOBe2arfAWa7cmfZFJxfF6Aa8Ap-hsfopfUifkwA6H4e78kKagOzvP__CIF2q23o3_y69TD4MfoauC8yhmveTdINH3hfqT6fraQkTQuX5xtmCrZSpTAYeVeJG6SguQF8U26ffalHeTgkR8WusEcxmaCvSzDMDbpHKcxAPSFbHnIeKSAmER9jwwQIer0IoxsId6OmnC2Y1dfDJDVsZ9ve2AzaOPaeMe6"
-      },
-      {
-        "productId": 9050724539,
-        "productName": "탐사 깨끗 비데티슈 32% 더 커진 특대 XL 사이즈 캡형, 10팩, 40매, 60g",
-        "productPrice": 10390,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/a94JYQ3gFNAMG_LGa742-7_6I180KOrVtUTJdcZ0j1INAs9LMth2dJ4avDCUWShKZAMrFiBt0BQtkRt9C62BIs9bMxVWwP--wMOaPooQ0MclMuexLOZyLQNIoufUd_eoZZQAqzY9H1fJgmTr3Dqxbud5KpJ75sgpe_RcnIPc38OIFFWNxmjtTQlW1VGUPFOCvlAMASGcYcHH7szX6xnLysGhtgEYLqy4kZPPi__IbZRgK_hnT8hs5O6L_vQ1baQryhYV-GMEt1pTbxZLe8u4w47DsU8B1kjPPinhXRyQLdGEAua6lb1vZ-9QDJrDv28KOz6W6V-HY9LUj2B73M1DOYnKwAqNACYwGCOTL1BJx-lZdHaEs__PlnI_5NHfZeaOdIxvlkI2AgmJdgY=",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=9050724539&itemId=26563353061&vendorItemId=93537010555&traceid=V0-193-e640b31e651bf39d&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "생활용품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/oB3t4wKvFJWJgtmfoDpZrTSd4e44cxQOOk6be9sPfIU2uldl_7TW_P5FBuPo-ysgg8jCILvlEX_p0f4wT_wNuJl_e-LoFrQjGLUe1Nnluo46zi-cvNkzgfAgLKHsnjAPTg0HUH4wBFW1s3V1Ovo1IF2vIaNMA4hwpYwt72-PpEwtE3dTlGf072PBqT7g45t8MjhtCq3JxHrLrqVJXibr-bDUBs3mfi7Mq4oh4dZ2US05cC8uvkDcQBQzgMG9T0hTm8LHrszr1BkIf2QghaesIKCs9q989C2d3M1eDBlpwy-PXDh_XmrLfTn4uybGHhHWTEltsjPDcCwniYRBBFzps-hi6NP5ecGEYq8dc7XZA_o4yGjLATprkrHyrw=="
-      },
-      {
-        "productId": 9349884830,
-        "productName": "어린이수학동아 4호 (26년 2월 15일) : 꼬불꼬불 라면 속 수학 뺄셈, 어린이과학동아, 어린이 수학동아 편집부",
-        "productPrice": 10850,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/xA5aEBrXFUjnUS4WxHEyTmXH3LzfL__51AAkHAipgAZvBuZ2-3l_NGdqntH3t8gkKXw1LlsbDeVkxs8YgjvLle2H7W8O-Cr_ScT6ZlpEpwUCeLndkh03m5hmFhQfOO3NvAtB9sNSh_dhyjNKK5qVXpW6jEC8krylgz9g-bsef9_oisRibgnqrIH8czJHFfCBBCbf1WwR_z4PuoFA8Sic0T4YNb-eJxNHorh71QrHhC8vEFWOXloQ-a2aZnup6mUlTzoPf3tRhBv1-EiGPuTkoihmbg4Mgfo1E4VlqzkyhgCKORN9idbqQovXAY48WGlImfttVuUradr2rgZndLWc0ZoZw_ywMgXeS2W4iSuTK5ljf_rJp1jKrNEBRg9ba0KBlzBuxNauGgGXtCk=",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=9349884830&itemId=27737010099&vendorItemId=94698167378&traceid=V0-193-a2e5d4dfafcf6e5d&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "도서/음반",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/Ay2BQKLad7KSaXlLA_IPKUFNzoxZbFuRT3_-TavUvZWQPBXxmfnHOK8asItKwVXbaWoTLUE558I7QcKvUP00wjrTSTrQITv2uOHcixTAFJevsHGsAyyklwhR6fgDjlpAV7x8zOEB6SOxXSX8fZGbHAy80iCl385NtIfZDTQefOyig0oP39icWmXn32X9z7MFf4fqdT0Ye_cudin-icvXwrVbhqtmF-qiOMw0r7PLWHh1wXateo7Qtn2o-hZp4LHZtN1fzHuFjemBqfEaBWmDqvaL3sXE5FBD2xCQu31Va4ts7uNTDH1wrr848iKWnzK9VV7UHZM2YnhR36B9f677oAqwLRlpug7Qb2s0nYk5G5zEt1uItz9CNH2yoA=="
-      },
-      {
-        "productId": 5580358764,
-        "productName": "로로벨 구취제거 와와 센스 구강스프레이, 10ml, 3개",
-        "productPrice": 16090,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/UZAZAi6_UrktrlAWUduJ2YXZbvT066l-m8HV5rh3tz5nH8uc4ygOPRYbk4tHNMsgoC9Cz532IjRPWJYUnkToXwXcwRCNSDuk04UH3T1_UwQcXg6fo5Hsrktq8450ksdeO2_WFe30jymLvH2VTAPsHDdDO47ReECK7jYjaBGS5cacL2o2CEVUqZrVrXcEK3yxXdt25vPx0sLV8wOdpdPCCk5RYEkWVDHHAPkhd5Mk1A6Fqzyj680NyA1MQZBczLkKuZG4EdmhKBNZLRIEG2FKsdtACFTNicZPt3sJP1evWE6YA5P4bOzwe0Vlz5BiwkWZ8u98U5K_enkzTHd_W9LGLcVPLGizrWDW0X61iqtLiJKP8JRTXNsc5nm7nlPTRsJeaff-SEe_v3Dmx4N_m0hWwtLX",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=5580358764&itemId=8916343051&vendorItemId=76202948198&traceid=V0-193-b215046c3fc397c6&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "생활용품",
-        "isRocket": true,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/J7O9RqVxEVEt-UvaJyQ1wsfHI9j6EozweTKeyaDJmdQpMw14K7-lZRgs4DkiY7kH0anG8loF9eD_aCAK2FeIF_W2m_WkIAx2AHaABn9DI3anrB6YJrnOzT20EjR5HCmdMHaOOrVpUhiUdtA9IZz_-qj_MshRzzXhgYJrgmB3gTE2h5hRo-aliGRdVY_Nj-9Qln-grigkEBW8SON_XI1L50c1otIQvTOCk3FBQVbHIYD_uDAbMMtvXrU4DqumKAEQq-3xUuB2TrFYSYqLQvt53KnWv8gwmf8AEna_8buf-eKmC-asS5SPpnO9OqszNkX0aPKsnVMaQAwz6LaFe6MEeDuy87RHERqPWEFxGU39nToxqoqhrLf-26DpcZwhqGmahgM="
-      },
-      {
-        "productId": 7319193288,
-        "productName": "자생앤 커큐민 바이오페린, 120정, 1개",
-        "productPrice": 21230,
-        "productImage": "https://ads-partners.coupang.com/openapi/image/bpF6NWYVhm4fZAlobvpeiLBCtDmmFvT5xzT4Vf_SCImhVY7uh5IG_Hul-e-2p2NkDfXI6XUeTvVHXLNoOxeo9S_9MqoqiyO5sRMrnsDu7o6c26z3I5u2a9Te0VyJNYrCQ7f7K2tP0EWW3KtxT8ao-q0Klah-DlPRTxQxa88VofJPRHlkPjDxZr_1vSzXi3OMkR9H5mRFhYNnbTIEgmrnUtsUBz7DFTCvuA8KSS2v6pRIYOz3KYtNLQnxtaAO1Yw2phBV8H7seqvf_PrWsV7Sv1gUuNdnwBz92dJAvtbI4D0wp2xq44IvEPaq5Iy_7RxXE0suA5rf2PX3vufzGsNKlISXzwmNrmckTecSYwE9HBiezfPlw0zoh3mLFXlaAxrhnm380ncHsnGPohEOd5J-M2XyR4crA5GIg9Ap",
-        "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=7319193288&itemId=23184387601&vendorItemId=87023936767&traceid=V0-193-24ba660e4e903a0a&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-        "categoryName": "식품",
-        "isRocket": false,
-        "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/ZWrqmppP0KUZdACCZSIcaFNELdY7jRxPb8NndAjdpNmUUy4XhHPlYuOOXpMb2fAp0Sl1Ah21vpKy0u_ZJtkStEC6hcbPgJv4jhU4A-KzYmu3xQKCJiOMosqhB2ewwFMAHDwLPnTz4IJI5oEFvLzXFPlCL7E1364n0CgCNqtBa8e39OngkWFhW-AoVPMd3rzdYBBGBl7yzisbw8jJo5yD19VrxRTrFlC6u31lBrrCzHj2KgxrmhlVkSWr4GyfqDYmf7ekRzRyp8OibgZBEWmy7MjyDMpihYCHF2IvQzJdFND7Mk1F5p1cTULqJ8EeWp6CNRBcUKERTbcnWjMN459fvjkvi8Ihy7wPWEPULjXFNOAOQirrDl-IEu5JhYHLEMCnScMoB-cdwwTEHX8="
-      }
+    <div class="links-grid" id="linksGrid">
+        </div>
+</div>
 
-        ];
-
-        let currentCategory = '전체';
-
-        function renderCategories() {
-            const categories = ['전체', ...new Set(linksData.map(link => link.categoryName))];
-            document.getElementById('categories').innerHTML = categories.map(cat => `
-                <button class="category-btn ${cat === currentCategory ? 'active' : ''}" 
-                        onclick="filterByCategory('${cat}')">${cat}</button>
-            `).join('');
+<script>
+    // 요청하신 고정 데이터를 여기에 정확히 넣었습니다.
+    const linksData = [
+        {
+            "productId": 261192458,
+            "productName": "코멧 순백 3겹 라벤더 바닐라 롤화장지, 30m, 30개입, 1개",
+            "productPrice": 10990,
+            "productImage": "https://ads-partners.coupang.com/openapi/image/zJ-k-AUyMS7cgNFMzP8Z1NZKM_CISY1eetrwH8DcsiLNmLDAEJkVP5_J0j2-fXr2zvE53MU2azVo0mopeC3Hl6-z3xdxW4ylX774lvFTyRhT6hxSbxWXNcCWWbBaYYTjMe7wR8f65pYdnJn-ypFqa87tKxA3SbTo2JLz_DZ1zYdTxUKCK908J6nIJVc7CEo8ETHyyZr1Nr0EHjTmM6Rl5KnQ5J4nLqLnhUtuBUfwCWdKgTx0IVbW8IPvd40W5w-PBm9mW5bh28Zlp48vTuHBKH97LjeYZcO0Fg24uO3ENEU7fvZ1OOwSj2-QpQXydLUr0qiuET7E0y9dHSQFtDrM8oZ1Dfm1sKSHKKq8-lWK4jmbLinMWdQaSHqkx-MuNRbx2WzV5iLh",
+            "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=261192458&itemId=816702952&vendorItemId=5077941266&traceid=V0-193-5875e3f7a89a609b&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
+            "categoryName": "생활용품",
+            "isRocket": true
         }
+    ];
 
-        function filterByCategory(cat) {
-            currentCategory = cat;
-            renderCategories();
-            renderLinks();
-        }
-
-        function renderLinks() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const grid = document.getElementById('linksGrid');
-            
-            let filtered = linksData.filter(link => {
-                const matchesCat = currentCategory === '전체' || link.categoryName === currentCategory;
-                const matchesSearch = link.productName.toLowerCase().includes(searchTerm);
-                return matchesCat && matchesSearch;
-            });
-
-            grid.innerHTML = filtered.map(link => `
-                <div class="link-card">
-                    <div class="image-wrapper">
-                        <img src="${link.productImage}" class="product-img" alt="${link.productName}" 
-                             onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
-                    </div>
-                    <div class="content-wrapper">
-                        <span class="category-tag">${link.categoryName}</span>
-                        <h3>${link.productName}</h3>
-                        <div class="price-container">
-                            <span class="price-val">${link.productPrice.toLocaleString()}원</span>
-                            ${link.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket-img">' : ''}
-                        </div>
-                        <a href="${link.productUrl}" class="cta-button" target="_blank" rel="noopener noreferrer">자세히 보기</a>
-                    </div>
+    function renderLinks() {
+        const grid = document.getElementById('linksGrid');
+        grid.innerHTML = linksData.map(link => `
+            <a href="${link.productUrl}" class="link-card" target="_blank" rel="noopener noreferrer">
+                <div class="img-box">
+                    <img src="${link.productImage}" 
+                         alt="${link.productName}" 
+                         referrerpolicy="no-referrer"
+                         onerror="this.src='https://via.placeholder.com/140?text=Image'">
                 </div>
-            `).join('');
-        }
+                <div class="info-box">
+                    <div>
+                        <span class="category">${link.categoryName}</span>
+                        <h3>${link.productName}</h3>
+                        <div class="price-row">
+                            <span class="price">${link.productPrice.toLocaleString()}원</span>
+                            ${link.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket-icon">' : ''}
+                        </div>
+                    </div>
+                    <div class="buy-btn">최저가 확인하기</div>
+                </div>
+            </a>
+        `).join('');
+    }
 
-        document.getElementById('searchInput').addEventListener('input', renderLinks);
-        renderCategories();
-        renderLinks();
-    </script>
+    renderLinks();
+</script>
+
 </body>
 </html>
