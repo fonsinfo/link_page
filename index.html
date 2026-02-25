@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쿠팡 파트너스 추천 리스트</title>
+    <title>쿠팡 파트너스 - 깔끔한 상품 모음</title>
     <style>
         :root {
-            --primary-color: #007aff;
-            --rocket-color: #0089ff;
-            --price-color: #ae0000;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-color: #f9f9fb; /* 매우 밝은 회색 배경 */
+            --card-bg: #ffffff;
+            --accent-color: #0071e3; /* 세련된 블루 */
+            --text-main: #1d1d1f;
+            --text-sub: #86868b;
+            --price-red: #d60000;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
-            background: var(--bg-gradient);
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             line-height: 1.6;
             padding: 20px;
+            word-break: keep-all; /* 한글 줄바꿈 최적화 */
         }
 
         .container {
-            max-width: 650px; /* 세로 가독성을 위해 본문 폭 최적화 */
+            max-width: 480px; /* 스마트폰에서 보기에 가장 쾌적한 너비 */
             margin: 0 auto;
         }
 
@@ -33,182 +36,178 @@
         }
 
         header h1 {
-            font-size: 1.8rem;
-            color: #1d1d1f;
+            font-size: 1.5rem;
+            font-weight: 700;
             letter-spacing: -0.5px;
         }
 
         .affiliate-notice {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 12px;
-            border-radius: 8px;
             font-size: 0.75rem;
-            color: #666;
+            color: var(--text-sub);
             text-align: center;
             margin-bottom: 30px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #eee;
         }
 
-        /* 검색창 및 카테고리 */
-        .search-box {
-            margin-bottom: 20px;
-        }
-
+        /* 검색창 디자인 개선 */
+        .search-box { margin-bottom: 25px; }
         .search-box input {
             width: 100%;
             padding: 16px 20px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
+            border: none;
+            border-radius: 15px;
+            background: #fff;
             font-size: 1rem;
-            outline: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: border-color 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            outline-color: var(--accent-color);
         }
 
-        .search-box input:focus { border-color: var(--primary-color); }
-
+        /* 카테고리 칩 */
         .categories {
             display: flex;
-            overflow-x: auto; /* 카테고리가 많아지면 옆으로 스크롤 */
-            gap: 8px;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            -webkit-overflow-scrolling: touch;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 5px 0;
         }
-
         .categories::-webkit-scrollbar { display: none; }
-
         .category-btn {
             white-space: nowrap;
-            padding: 8px 16px;
-            border: none;
+            padding: 8px 18px;
+            border: 1px solid #ddd;
             border-radius: 20px;
-            background: white;
-            color: #555;
+            background: #fff;
             font-size: 0.9rem;
+            color: var(--text-main);
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: 0.2s;
         }
-
         .category-btn.active {
-            background: #333;
-            color: white;
-            font-weight: bold;
+            background: var(--text-main);
+            color: #fff;
+            border-color: var(--text-main);
         }
 
-        /* 상품 리스트 가독성 강화 */
+        /* 상품 카드 디자인 (가장 중요한 부분) */
         .links-grid {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 35px; /* 상품 간의 간격을 넓혀 눈이 편하게 함 */
         }
 
         .link-card {
-            background: white;
-            border-radius: 20px;
+            background: var(--card-bg);
+            border-radius: 24px; /* 더 둥글게 만들어 부드러운 느낌 */
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* 부드럽고 깊은 그림자 */
+            transition: transform 0.2s ease;
         }
 
-        .link-card:active { transform: scale(0.98); }
-
-        .link-card img {
+        .image-wrapper {
             width: 100%;
-            aspect-ratio: 1 / 1; /* 정사각형 유지 */
-            object-fit: contain;
             background: #fff;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 20px; /* 이미지 주변 여백 */
+            display: flex;
+            justify-content: center;
         }
 
-        .link-card-content {
+        .product-img {
+            width: 100%;
+            height: auto;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .content-wrapper {
             padding: 24px;
+            padding-top: 0;
         }
 
-        .link-card-category {
+        .category-tag {
             font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 10px;
             display: block;
         }
 
         .link-card h3 {
             font-size: 1.15rem;
-            color: #1d1d1f;
-            margin-bottom: 12px;
             font-weight: 600;
             line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* 두 줄 넘어가면 말줄임 */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            margin-bottom: 15px;
+            color: #1d1d1f;
         }
 
-        .price-section {
-            margin-bottom: 20px;
+        /* 가격과 로켓배송 */
+        .price-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            margin-bottom: 25px;
         }
 
-        .price-tag {
-            font-size: 1.4rem;
+        .price-val {
+            font-size: 1.5rem;
             font-weight: 800;
-            color: var(--price-color);
+            color: var(--price-red);
         }
 
-        .rocket-badge {
-            height: 16px;
+        .rocket-img {
+            height: 18px;
         }
 
-        .buy-button {
+        /* 버튼 디자인 */
+        .cta-button {
             display: block;
             text-align: center;
             padding: 16px;
-            background: #007aff;
-            color: white;
+            background: var(--accent-color);
+            color: #fff;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 700;
             font-size: 1.05rem;
-            transition: background 0.3s;
+            transition: opacity 0.2s;
         }
-
-        .buy-button:hover { background: #0056b3; }
+        .cta-button:active { opacity: 0.8; }
 
         footer {
             text-align: center;
             padding: 60px 0;
+            color: var(--text-sub);
             font-size: 0.85rem;
-            color: #888;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Pick & 추천 아이템</h1>
+            <h1>Pick of the Day</h1>
         </header>
 
         <div class="affiliate-notice">
-            본 포스팅은 쿠팡 파트너스 활동의 일환으로, 구매 시 일정액의 수수료를 제공받을 수 있습니다.
+            이 포스팅은 쿠팡 파트너스 활동의 일환으로 수수료를 제공받습니다.
         </div>
 
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="무엇을 찾으시나요?">
+            <input type="text" id="searchInput" placeholder="궁금한 상품을 검색하세요">
         </div>
 
         <div class="categories" id="categories"></div>
+
         <div class="links-grid" id="linksGrid"></div>
 
         <footer>
-            <p>© 2026 MD's Choice. All rights reserved.</p>
+            <p>© 2026 MD Selection</p>
         </footer>
     </div>
 
     <script>
-        // linksData 배열에 객체를 추가하면 자동으로 리스트가 생성됩니다.
         let linksData = [
       {
         "productId": 261192458,
@@ -420,25 +419,21 @@
         "isRocket": false,
         "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/ZWrqmppP0KUZdACCZSIcaFNELdY7jRxPb8NndAjdpNmUUy4XhHPlYuOOXpMb2fAp0Sl1Ah21vpKy0u_ZJtkStEC6hcbPgJv4jhU4A-KzYmu3xQKCJiOMosqhB2ewwFMAHDwLPnTz4IJI5oEFvLzXFPlCL7E1364n0CgCNqtBa8e39OngkWFhW-AoVPMd3rzdYBBGBl7yzisbw8jJo5yD19VrxRTrFlC6u31lBrrCzHj2KgxrmhlVkSWr4GyfqDYmf7ekRzRyp8OibgZBEWmy7MjyDMpihYCHF2IvQzJdFND7Mk1F5p1cTULqJ8EeWp6CNRBcUKERTbcnWjMN459fvjkvi8Ihy7wPWEPULjXFNOAOQirrDl-IEu5JhYHLEMCnScMoB-cdwwTEHX8="
       }
-   
+
         ];
 
         let currentCategory = '전체';
 
         function renderCategories() {
             const categories = ['전체', ...new Set(linksData.map(link => link.categoryName))];
-            const categoriesContainer = document.getElementById('categories');
-            
-            categoriesContainer.innerHTML = categories.map(category => `
-                <button class="category-btn ${category === currentCategory ? 'active' : ''}" 
-                        onclick="filterByCategory('${category}')">
-                    ${category}
-                </button>
+            document.getElementById('categories').innerHTML = categories.map(cat => `
+                <button class="category-btn ${cat === currentCategory ? 'active' : ''}" 
+                        onclick="filterByCategory('${cat}')">${cat}</button>
             `).join('');
         }
 
-        function filterByCategory(category) {
-            currentCategory = category;
+        function filterByCategory(cat) {
+            currentCategory = cat;
             renderCategories();
             renderLinks();
         }
@@ -447,30 +442,26 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const grid = document.getElementById('linksGrid');
             
-            let filteredLinks = linksData;
-            
-            if (currentCategory !== '전체') {
-                filteredLinks = filteredLinks.filter(link => link.categoryName === currentCategory);
-            }
-            
-            if (searchTerm) {
-                filteredLinks = filteredLinks.filter(link => 
-                    link.productName.toLowerCase().includes(searchTerm) ||
-                    link.categoryName.toLowerCase().includes(searchTerm)
-                );
-            }
+            let filtered = linksData.filter(link => {
+                const matchesCat = currentCategory === '전체' || link.categoryName === currentCategory;
+                const matchesSearch = link.productName.toLowerCase().includes(searchTerm);
+                return matchesCat && matchesSearch;
+            });
 
-            grid.innerHTML = filteredLinks.map(link => `
+            grid.innerHTML = filtered.map(link => `
                 <div class="link-card">
-                    <img src="${link.productImage}" alt="${link.productName}" onerror="this.src='https://via.placeholder.com/600x600?text=이미지+준비중'">
-                    <div class="link-card-content">
-                        <span class="link-card-category">${link.categoryName}</span>
+                    <div class="image-wrapper">
+                        <img src="${link.productImage}" class="product-img" alt="${link.productName}" 
+                             onerror="this.src='https://via.placeholder.com/400x400?text=No+Image'">
+                    </div>
+                    <div class="content-wrapper">
+                        <span class="category-tag">${link.categoryName}</span>
                         <h3>${link.productName}</h3>
-                        <div class="price-section">
-                            <span class="price-tag">${link.productPrice.toLocaleString()}원</span>
-                            ${link.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket-badge" alt="로켓배송">' : ''}
+                        <div class="price-container">
+                            <span class="price-val">${link.productPrice.toLocaleString()}원</span>
+                            ${link.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket-img">' : ''}
                         </div>
-                        <a href="${link.productUrl}" class="buy-button" target="_blank" rel="noopener noreferrer">최저가 확인 및 구매</a>
+                        <a href="${link.productUrl}" class="cta-button" target="_blank" rel="noopener noreferrer">자세히 보기</a>
                     </div>
                 </div>
             `).join('');
