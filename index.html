@@ -4,48 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>MD 추천 상품 리스트</title>
+    <title>MD 추천 리스트</title>
     <style>
         :root {
-            --bg-color: #f2f2f7;
-            --card-bg: #ffffff;
+            --bg: #f2f2f7;
+            --card: #ffffff;
             --blue: #007aff;
             --red: #ff3b30;
-            --gray: #8e8e93;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg);
             padding: 20px;
             display: flex;
             justify-content: center;
         }
 
-        .container { width: 100%; max-width: 480px; }
+        .container { width: 100%; max-width: 500px; }
 
-        header { text-align: center; padding: 20px 0 30px; }
+        header { text-align: center; padding: 20px 0; }
         header h1 { font-size: 1.4rem; color: #1c1c1e; }
+
+        /* 검색창 스타일 */
+        .search-container { margin-bottom: 20px; }
+        .search-container input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            outline-color: var(--blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 카테고리 칩 */
+        .categories {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            white-space: nowrap;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .cat-btn.active { background: #333; color: #fff; font-weight: bold; }
 
         .links-grid { display: flex; flex-direction: column; gap: 20px; }
 
-        /* 카드 가독성 디자인 */
+        /* 카드 디자인 */
         .link-card {
-            background: var(--card-bg);
+            background: var(--card);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            text-decoration: none;
-            color: inherit;
-            display: block;
             transition: transform 0.2s;
+            position: relative;
         }
 
-        .link-card:active { transform: scale(0.98); }
-
-        /* 이미지 영역 */
         .img-box {
             width: 100%;
             background: #fff;
@@ -55,58 +82,48 @@
             border-bottom: 1px solid #f2f2f7;
         }
 
-        .img-box img {
-            width: 100%;
-            height: auto;
-            max-height: 300px;
-            object-fit: contain;
-        }
+        .img-box img { width: 100%; height: auto; max-height: 300px; object-fit: contain; }
 
-        /* 텍스트 정보 */
         .info-box { padding: 20px; }
-        .category { font-size: 0.75rem; color: var(--blue); font-weight: 700; margin-bottom: 8px; display: block; }
-        .name { font-size: 1.05rem; font-weight: 600; line-height: 1.4; margin-bottom: 15px; color: #1c1c1e; }
+        .category-name { font-size: 0.75rem; color: var(--blue); font-weight: 700; margin-bottom: 8px; }
+        .product-name { font-size: 1rem; font-weight: 600; line-height: 1.4; margin-bottom: 15px; color: #1c1c1e; }
 
         .price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
         .price { font-size: 1.4rem; font-weight: 800; color: var(--red); }
         .rocket { height: 16px; }
 
         .buy-btn {
+            display: block;
             background: var(--blue);
             color: #fff;
             text-align: center;
             padding: 15px;
             border-radius: 14px;
             font-weight: 700;
-            font-size: 1rem;
+            text-decoration: none;
         }
 
-        .affiliate-text {
-            font-size: 0.7rem;
-            color: var(--gray);
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-        }
-
-        /* 실적 집계용 투명 이미지 */
         .pixel { position: absolute; width: 1px; height: 1px; opacity: 0; }
+        
+        .no-result { text-align: center; padding: 50px; color: #888; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header><h1>오늘의 추천템</h1></header>
-    <div id="linksGrid" class="links-grid">
-        </div>
-    <div class="affiliate-text">
-        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+    <header><h1>오늘의 핫딜 🔥</h1></header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="상품명을 검색해보세요...">
     </div>
+
+    <div class="categories" id="categoryBox"></div>
+
+    <div id="linksGrid" class="links-grid"></div>
 </div>
 
 <script>
-    // JSON 파일을 따로 만들지 않고 여기에 배열로 관리하세요.
-    // 쉼표(,) 위치에 주의해서 추가하시면 됩니다!
+    // 사용자님의 JSON 데이터
     const linksData = [
         {
             "productId": 261192458,
@@ -118,32 +135,64 @@
             "isRocket": true,
             "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/TdL11REp4GjNxFIpTeUriuBSHRxKksZ81E94L5DcC30yxh2DYd-rKZL2ajd2xmPxkKciV6yyissWdRSls7H3NGu8DQKbKMsYbox3BKw-8VD3w98pMOqPZ-wdsDeX8OGOlFedrHQqGCfB4nuHEOGFibUhFQW7tDssgG_dLJqx9YUzTCPWmXkfbwk62-4kk_0JCwXTeSCF80wgAXZb-L1xMqvH3deTXu4nEKITOziCx-qsxo4doM5tfDnLaTa-Yk918gosQ2bnnw8BGokQoD12Ci2v7CCpdFTnKz1wLth4cOPEDctJqouTtvZde2Oz8BO4bpgnQH8k_jLV1DnZE2u9zCj-1tAmNUUQr5fKwawsK6vRJ0vRUbk="
         }
-        // 다음 상품 추가 시 여기에 { ... } 복사
     ];
 
+    let currentCat = '전체';
+
+    // 카테고리 버튼 생성
+    function initCategories() {
+        const cats = ['전체', ...new Set(linksData.map(item => item.categoryName))];
+        const box = document.getElementById('categoryBox');
+        box.innerHTML = cats.map(c => `
+            <button class="cat-btn ${c === currentCat ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>
+        `).join('');
+    }
+
+    function setCategory(c) {
+        currentCat = c;
+        initCategories();
+        render();
+    }
+
+    // 상품 렌더링
     function render() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
         const grid = document.getElementById('linksGrid');
-        grid.innerHTML = linksData.map(item => `
+        
+        const filtered = linksData.filter(item => {
+            const matchCat = currentCat === '전체' || item.categoryName === currentCat;
+            const matchQuery = item.productName.toLowerCase().includes(query);
+            return matchCat && matchQuery;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="no-result">검색 결과가 없습니다.</div>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(item => `
             <div class="link-card">
-                <a href="${item.productUrl}" target="_blank" rel="noopener">
-                    <div class="img-box">
-                        <img src="${item.productImage}" alt="${item.productName}" referrerpolicy="no-referrer">
-                    </div>
-                </a>
+                <div class="img-box">
+                    <img src="${item.productImage}" alt="${item.productName}" referrerpolicy="no-referrer">
+                </div>
                 <div class="info-box">
-                    <span class="category">${item.categoryName}</span>
-                    <div class="name">${item.productName}</div>
+                    <div class="category-name">${item.categoryName}</div>
+                    <div class="product-name">${item.productName}</div>
                     <div class="price-row">
                         <span class="price">${item.productPrice.toLocaleString()}원</span>
                         ${item.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket">' : ''}
                     </div>
                     <a href="${item.productUrl}" target="_blank" class="buy-btn">최저가 확인하기</a>
                 </div>
-                <img src="${item.impressionUrl}" class="pixel">
+                <img src="${item.productImage}" class="pixel">
             </div>
         `).join('');
     }
 
+    document.getElementById('searchInput').addEventListener('input', render);
+
+    // 초기화 실행
+    initCategories();
     render();
 </script>
 
