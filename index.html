@@ -3,177 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
-    <title>쿠팡 파트너스 추천 리스트</title>
+    <meta name="referrer" content="no-referrer"> <title>My Selection</title>
     <style>
-        :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --accent-blue: #007aff;
-            --price-red: #e03131;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #f5f5f7; --card: #ffffff; --blue: #007aff; --red: #d60000; }
+        body { background: var(--bg); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; }
+        .links-grid { display: flex; flex-direction: column; gap: 20px; }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
-            background-color: var(--bg-color);
-            color: #333;
-            padding: 20px;
+        .link-card { 
+            background: var(--card); border-radius: 20px; overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-decoration: none; color: inherit;
         }
 
-        .container {
-            max-width: 480px; /* 모바일 가독성 최적화 너비 */
-            margin: 0 auto;
-        }
+        /* 이미지 영역 가독성 */
+        .image-box { width: 100%; background: #fff; padding: 10px; display: flex; justify-content: center; }
+        .product-img { width: 100%; max-height: 300px; object-fit: contain; }
 
-        header { text-align: center; padding: 20px 0; }
-
-        .affiliate-notice {
-            background: #fff;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            color: #888;
-            text-align: center;
-            margin-bottom: 25px;
-            border: 1px solid #eee;
-        }
-
-        .links-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* 카드 레이아웃 */
-        .link-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            transition: transform 0.2s;
-        }
-
-        .link-card:active { transform: scale(0.98); }
-
-        /* 이미지 박스 가독성 개선 */
-        .image-box {
-            width: 100%;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            min-height: 300px; /* 이미지가 안 나올 때를 대비한 최소 높이 */
-        }
-
-        .product-img {
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .info-box { padding: 20px; border-top: 1px solid #f1f3f5; }
-
-        .category-tag {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: var(--accent-blue);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .product-name {
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            word-break: keep-all;
-        }
-
-        .price-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .price-val {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--price-red);
-        }
-
-        .rocket-badge { height: 18px; }
-
-        .buy-btn {
-            display: block;
-            text-align: center;
-            background: var(--accent-blue);
-            color: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        footer { text-align: center; padding: 40px; color: #aaa; font-size: 0.8rem; }
+        .info-box { padding: 20px; }
+        .category { font-size: 0.8rem; color: var(--blue); font-weight: bold; }
+        .name { font-size: 1.1rem; margin: 10px 0; font-weight: 600; line-height: 1.4; }
+        .price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .price { font-size: 1.4rem; font-weight: 800; color: var(--red); }
+        .rocket { height: 16px; }
+        
+        .btn { background: var(--blue); color: #fff; text-align: center; padding: 15px; border-radius: 12px; font-weight: bold; }
+        
+        /* impressionUrl 처리를 위한 숨김 태그 */
+        .imp-pixel { position: absolute; width: 1px; height: 1px; opacity: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header><h1>Best Picks</h1></header>
-    <div class="affiliate-notice">쿠팡 파트너스 활동의 일환으로 수수료를 제공받습니다.</div>
-
     <div class="links-grid" id="linksGrid"></div>
-    <footer>© 2026 Recommended Items</footer>
 </div>
 
 <script>
-    const linksData = [
-        {
-            "productId": 261192458,
-            "productName": "코멧 순백 3겹 라벤더 바닐라 롤화장지, 30m, 30개입, 1개",
-            "productPrice": 10990,
-            "productImage": "https://ads-partners.coupang.com/openapi/image/zJ-k-AUyMS7cgNFMzP8Z1NZKM_CISY1eetrwH8DcsiLNmLDAEJkVP5_J0j2-fXr2zvE53MU2azVo0mopeC3Hl6-z3xdxW4ylX774lvFTyRhT6hxSbxWXNcCWWbBaYYTjMe7wR8f65pYdnJn-ypFqa87tKxA3SbTo2JLz_DZ1zYdTxUKCK908J6nIJVc7CEo8ETHyyZr1Nr0EHjTmM6Rl5KnQ5J4nLqLnhUtuBUfwCWdKgTx0IVbW8IPvd40W5w-PBm9mW5bh28Zlp48vTuHBKH97LjeYZcO0Fg24uO3ENEU7fvZ1OOwSj2-QpQXydLUr0qiuET7E0y9dHSQFtDrM8oZ1Dfm1sKSHKKq8-lWK4jmbLinMWdQaSHqkx-MuNRbx2WzV5iLh",
-            "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=261192458&itemId=816702952&vendorItemId=5077941266&traceid=V0-193-5875e3f7a89a609b&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
-            "categoryName": "생활용품",
-            "isRocket": true
-        }
-    ];
-
-    function renderLinks() {
-        const grid = document.getElementById('linksGrid');
-        grid.innerHTML = linksData.map(link => `
-            <a href="${link.productUrl}" class="link-card" target="_blank" rel="noopener noreferrer">
-                <div class="image-box">
-                    <img src="${link.productImage}" 
-                         class="product-img" 
-                         alt="${link.productName}"
-                         referrerpolicy="no-referrer"
-                         loading="lazy">
-                </div>
-                <div class="info-box">
-                    <span class="category-tag">${link.categoryName}</span>
-                    <h3 class="product-name">${link.productName}</h3>
-                    <div class="price-row">
-                        <span class="price-val">${link.productPrice.toLocaleString()}원</span>
-                        ${link.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket-badge">' : ''}
+    // 1. JSON 파일 불러오기
+    fetch('products.json')
+        .then(res => res.json())
+        .then(data => {
+            const grid = document.getElementById('linksGrid');
+            grid.innerHTML = data.map(item => `
+                <div class="link-card">
+                    <a href="${item.productUrl}" target="_blank" rel="noopener">
+                        <div class="image-box">
+                            <img src="${item.productImage}" class="product-img" referrerpolicy="no-referrer">
+                        </div>
+                    </a>
+                    <div class="info-box">
+                        <span class="category">${item.categoryName}</span>
+                        <div class="name">${item.productName}</div>
+                        <div class="price-row">
+                            <span class="price">${item.productPrice.toLocaleString()}원</span>
+                            ${item.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket">' : ''}
+                        </div>
+                        <a href="${item.productUrl}" target="_blank" class="btn">구매하러 가기</a>
                     </div>
-                    <div class="buy-btn">자세히 보기</div>
+                    <img src="${item.impressionUrl}" class="imp-pixel">
                 </div>
-            </a>
-        `).join('');
-    }
-
-    renderLinks();
+            `).join('');
+        })
+        .catch(err => console.error("데이터 로드 실패:", err));
 </script>
 
 </body>
