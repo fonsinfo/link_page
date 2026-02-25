@@ -3,238 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쿠팡 파트너스 추천 상품 리스트</title>
+    <title>Coupang Selection</title>
     <style>
         :root {
-            --primary-color: #007aff;
-            --rocket-color: #ff4b4b;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --card-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --bg-color: #ffffff;
+            --item-bg: #fdfdfd;
+            --primary-text: #222222;
+            --secondary-text: #666666;
+            --accent-color: #007aff;
+            --border-color: #eeeeee;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Noto Sans KR', sans-serif;
-            background: #f8f9fa;
-            color: #333;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
             line-height: 1.6;
-            padding-bottom: 50px;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-
+        /* 상단 디자인: 심플 & 미니멀 */
         header {
+            padding: 40px 20px;
             text-align: center;
-            padding: 60px 20px;
-            background: white;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         header h1 {
-            font-size: 2.2rem;
-            color: #222;
-            margin-bottom: 12px;
-            font-weight: 800;
-        }
-
-        header p { color: #666; font-size: 1.1rem; }
-
-        .affiliate-notice {
-            background: #fff3cd;
-            color: #856404;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 20px auto;
-            max-width: 800px;
-            font-size: 0.85rem;
-            text-align: center;
-            border: 1px solid #ffeeba;
-        }
-
-        /* 검색창 디자인 개선 */
-        .search-box {
-            max-width: 500px;
-            margin: 30px auto;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 16px 25px 16px 55px;
-            border: 2px solid #eee;
-            border-radius: 30px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .search-box input:focus { border-color: var(--primary-color); box-shadow: 0 0 10px rgba(0,122,255,0.1); }
-
-        .search-box::before {
-            content: "🔍";
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-        }
-
-        .categories {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .category-btn {
-            padding: 10px 22px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            background: white;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .category-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* 상품 카드 디자인 개선 */
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .link-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #efefef;
-        }
-
-        .link-card:hover { transform: translateY(-8px); }
-
-        .image-wrapper {
-            position: relative;
-            width: 100%;
-            padding-top: 100%; /* 1:1 정방형 유지 */
-            background: #fdfdfd;
-        }
-
-        .link-card img {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* 이미지 잘림 방지 */
-            padding: 10px;
-        }
-
-        .rocket-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #ff4b4b;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-
-        .link-card-content {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .link-card-category {
-            font-size: 0.75rem;
-            color: var(--primary-color);
-            font-weight: bold;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
             margin-bottom: 8px;
         }
 
-        .link-card h3 {
-            font-size: 1rem;
-            margin-bottom: 12px;
-            color: #333;
-            height: 2.8rem;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            line-height: 1.4;
+        .affiliate-notice {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 20px;
         }
 
-        .price-tag {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #ae0000;
-            margin-bottom: 15px;
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .price-tag span { font-size: 0.9rem; font-weight: normal; margin-left: 2px; }
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #f5f5f5;
+            outline: none;
+            font-size: 0.95rem;
+        }
 
-        .buy-btn {
-            display: block;
-            text-align: center;
-            padding: 12px;
-            background: var(--primary-color);
-            color: white;
+        /* 메인 컨텐츠 영역 */
+        .container {
+            max-width: 700px; /* 세로형 보기에 적합한 좁은 폭 */
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 상품 리스트: 세로 배치 */
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .link-card {
+            display: flex; /* 이미지와 텍스트를 가로로 배치하여 전체는 세로 리스트 구현 */
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
             text-decoration: none;
-            border-radius: 12px;
-            font-weight: bold;
+            color: inherit;
             transition: background 0.2s;
         }
 
-        .buy-btn:hover { background: #0056b3; }
+        .link-card:hover {
+            background-color: #fafafa;
+        }
 
-        .no-results { text-align: center; padding: 100px 0; color: #999; grid-column: 1/-1; }
+        .image-box {
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 20px;
+            border: 1px solid #f0f0f0;
+        }
 
-        footer { text-align: center; margin-top: 60px; color: #aaa; font-size: 0.9rem; }
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content-box {
+            flex-grow: 1;
+        }
+
+        .content-box .category {
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .content-box h3 {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ae0000;
+        }
+
+        .price span {
+            font-size: 0.85rem;
+            margin-left: 2px;
+        }
+
+        .rocket-tag {
+            font-size: 0.7rem;
+            color: #ff4b4b;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>쿠팡 파트너스 추천 리스트</h1>
-        <p>오늘의 특가 상품을 놓치지 마세요!</p>
+        <h1>SELECTED ITEMS</h1>
+        <p class="affiliate-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로 수수료를 제공받을 수 있습니다.</p>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="상품 검색하기">
+        </div>
     </header>
 
     <div class="container">
-        <div class="affiliate-notice">
-            이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-        </div>
-
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="찾으시는 상품이 있으신가요?">
-        </div>
-
-        <div class="categories" id="categories"></div>
-
-        <div class="links-grid" id="linksGrid"></div>
-
-        <footer>
-            <p>© 2026 추천인 ID: AF9975687</p>
-        </footer>
+        <div class="links-list" id="linksList">
+            </div>
     </div>
 
+    <footer>
+        &copy; 2026 COUPANG PARTNERS
+    </footer>
+
     <script>
-        // 데이터 구조 수정 (쿠팡 API 데이터 구조를 그대로 수용할 수 있도록 매핑)
-        let linksData = [
+        // 데이터 키값 확인: productImage, productName 등
+        const linksData = [
             {
                 "productId": 261192458,
                 "productName": "코멧 순백 3겹 라벤더 바닐라 롤화장지, 30m, 30개입, 1개",
@@ -244,69 +182,37 @@
                 "categoryName": "생활용품",
                 "isRocket": true
             }
-            // 추가 상품 데이터를 여기에 같은 형식으로 넣으세요.
         ];
 
-        let currentCategory = '전체';
-
-        function renderCategories() {
-            const categories = ['전체', ...new Set(linksData.map(link => link.categoryName))];
-            const categoriesContainer = document.getElementById('categories');
-            
-            categoriesContainer.innerHTML = categories.map(category => `
-                <button class="category-btn ${category === currentCategory ? 'active' : ''}" 
-                        onclick="filterByCategory('${category}')">
-                    ${category}
-                </button>
-            `).join('');
-        }
-
-        function filterByCategory(category) {
-            currentCategory = category;
-            renderCategories();
-            renderLinks();
-        }
-
         function renderLinks() {
+            const listContainer = document.getElementById('linksList');
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const grid = document.getElementById('linksGrid');
             
-            let filteredLinks = linksData;
-            
-            if (currentCategory !== '전체') {
-                filteredLinks = filteredLinks.filter(link => link.categoryName === currentCategory);
-            }
-            
-            if (searchTerm) {
-                filteredLinks = filteredLinks.filter(link => 
-                    link.productName.toLowerCase().includes(searchTerm) ||
-                    link.categoryName.toLowerCase().includes(searchTerm)
-                );
-            }
+            const filtered = linksData.filter(item => 
+                item.productName.toLowerCase().includes(searchTerm) || 
+                item.categoryName.toLowerCase().includes(searchTerm)
+            );
 
-            if (filteredLinks.length === 0) {
-                grid.innerHTML = '<div class="no-results">찾으시는 상품이 없습니다. 다른 키워드로 검색해보세요!</div>';
-                return;
-            }
-
-            grid.innerHTML = filteredLinks.map(link => `
-                <div class="link-card">
-                    <div class="image-wrapper">
-                        ${link.isRocket ? '<span class="rocket-badge">로켓배송</span>' : ''}
-                        <img src="${link.productImage}" alt="${link.productName}" onerror="this.src='https://via.placeholder.com/300?text=No+Image'">
+            listContainer.innerHTML = filtered.map(item => `
+                <a href="${item.productUrl}" target="_blank" class="link-card">
+                    <div class="image-box">
+                        <img src="${item.productImage}" alt="${item.productName}" onerror="this.src='https://via.placeholder.com/100'">
                     </div>
-                    <div class="link-card-content">
-                        <span class="link-card-category">${link.categoryName}</span>
-                        <h3>${link.productName}</h3>
-                        <div class="price-tag">${link.productPrice.toLocaleString()}<span>원</span></div>
-                        <a href="${link.productUrl}" target="_blank" rel="noopener noreferrer" class="buy-btn">상품 확인하기</a>
+                    <div class="content-box">
+                        <span class="category">${item.categoryName}</span>
+                        <h3>${item.productName}</h3>
+                        <div class="price">
+                            ${item.productPrice.toLocaleString()}<span>원</span>
+                            ${item.isRocket ? '<span class="rocket-tag">🚀로켓</span>' : ''}
+                        </div>
                     </div>
-                </div>
+                </a>
             `).join('');
         }
 
         document.getElementById('searchInput').addEventListener('input', renderLinks);
-        renderCategories();
+        
+        // 초기 렌더링
         renderLinks();
     </script>
 </body>
