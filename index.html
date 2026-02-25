@@ -3,68 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer"> <title>My Selection</title>
+    <meta name="referrer" content="no-referrer">
+    <title>MD 추천 상품 리스트</title>
     <style>
-        :root { --bg: #f5f5f7; --card: #ffffff; --blue: #007aff; --red: #d60000; }
-        body { background: var(--bg); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; }
-        .links-grid { display: flex; flex-direction: column; gap: 20px; }
-        
-        .link-card { 
-            background: var(--card); border-radius: 20px; overflow: hidden; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-decoration: none; color: inherit;
+        :root {
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --blue: #007aff;
+            --red: #ff3b30;
+            --gray: #8e8e93;
         }
 
-        /* 이미지 영역 가독성 */
-        .image-box { width: 100%; background: #fff; padding: 10px; display: flex; justify-content: center; }
-        .product-img { width: 100%; max-height: 300px; object-fit: contain; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+            background-color: var(--bg-color);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
+        .container { width: 100%; max-width: 480px; }
+
+        header { text-align: center; padding: 20px 0 30px; }
+        header h1 { font-size: 1.4rem; color: #1c1c1e; }
+
+        .links-grid { display: flex; flex-direction: column; gap: 20px; }
+
+        /* 카드 가독성 디자인 */
+        .link-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s;
+        }
+
+        .link-card:active { transform: scale(0.98); }
+
+        /* 이미지 영역 */
+        .img-box {
+            width: 100%;
+            background: #fff;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #f2f2f7;
+        }
+
+        .img-box img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+        /* 텍스트 정보 */
         .info-box { padding: 20px; }
-        .category { font-size: 0.8rem; color: var(--blue); font-weight: bold; }
-        .name { font-size: 1.1rem; margin: 10px 0; font-weight: 600; line-height: 1.4; }
-        .price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .category { font-size: 0.75rem; color: var(--blue); font-weight: 700; margin-bottom: 8px; display: block; }
+        .name { font-size: 1.05rem; font-weight: 600; line-height: 1.4; margin-bottom: 15px; color: #1c1c1e; }
+
+        .price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
         .price { font-size: 1.4rem; font-weight: 800; color: var(--red); }
         .rocket { height: 16px; }
-        
-        .btn { background: var(--blue); color: #fff; text-align: center; padding: 15px; border-radius: 12px; font-weight: bold; }
-        
-        /* impressionUrl 처리를 위한 숨김 태그 */
-        .imp-pixel { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+        .buy-btn {
+            background: var(--blue);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .affiliate-text {
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        /* 실적 집계용 투명 이미지 */
+        .pixel { position: absolute; width: 1px; height: 1px; opacity: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="links-grid" id="linksGrid"></div>
+    <header><h1>오늘의 추천템</h1></header>
+    <div id="linksGrid" class="links-grid">
+        </div>
+    <div class="affiliate-text">
+        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+    </div>
 </div>
 
 <script>
-    // 1. JSON 파일 불러오기
-    fetch('products.json')
-        .then(res => res.json())
-        .then(data => {
-            const grid = document.getElementById('linksGrid');
-            grid.innerHTML = data.map(item => `
-                <div class="link-card">
-                    <a href="${item.productUrl}" target="_blank" rel="noopener">
-                        <div class="image-box">
-                            <img src="${item.productImage}" class="product-img" referrerpolicy="no-referrer">
-                        </div>
-                    </a>
-                    <div class="info-box">
-                        <span class="category">${item.categoryName}</span>
-                        <div class="name">${item.productName}</div>
-                        <div class="price-row">
-                            <span class="price">${item.productPrice.toLocaleString()}원</span>
-                            ${item.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket">' : ''}
-                        </div>
-                        <a href="${item.productUrl}" target="_blank" class="btn">구매하러 가기</a>
+    // JSON 파일을 따로 만들지 않고 여기에 배열로 관리하세요.
+    // 쉼표(,) 위치에 주의해서 추가하시면 됩니다!
+    const linksData = [
+        {
+            "productId": 261192458,
+            "productName": "코멧 순백 3겹 라벤더 바닐라 롤화장지, 30m, 30개입, 1개",
+            "productPrice": 10990,
+            "productImage": "https://ads-partners.coupang.com/openapi/image/zJ-k-AUyMS7cgNFMzP8Z1NZKM_CISY1eetrwH8DcsiLNmLDAEJkVP5_J0j2-fXr2zvE53MU2azVo0mopeC3Hl6-z3xdxW4ylX774lvFTyRhT6hxSbxWXNcCWWbBaYYTjMe7wR8f65pYdnJn-ypFqa87tKxA3SbTo2JLz_DZ1zYdTxUKCK908J6nIJVc7CEo8ETHyyZr1Nr0EHjTmM6Rl5KnQ5J4nLqLnhUtuBUfwCWdKgTx0IVbW8IPvd40W5w-PBm9mW5bh28Zlp48vTuHBKH97LjeYZcO0Fg24uO3ENEU7fvZ1OOwSj2-QpQXydLUr0qiuET7E0y9dHSQFtDrM8oZ1Dfm1sKSHKKq8-lWK4jmbLinMWdQaSHqkx-MuNRbx2WzV5iLh",
+            "productUrl": "https://link.coupang.com/re/AFFSDP?lptag=AF9975687&pageKey=261192458&itemId=816702952&vendorItemId=5077941266&traceid=V0-193-5875e3f7a89a609b&requestId=20260225135412711065099833&tsource=blog.naver.com&token=57579E&puid=fonsinfo&puidType=PUID&landing_exp=APP_LANDING_A",
+            "categoryName": "생활용품",
+            "isRocket": true,
+            "impressionUrl": "https://ads-partners.coupang.com/openapi/impression/TdL11REp4GjNxFIpTeUriuBSHRxKksZ81E94L5DcC30yxh2DYd-rKZL2ajd2xmPxkKciV6yyissWdRSls7H3NGu8DQKbKMsYbox3BKw-8VD3w98pMOqPZ-wdsDeX8OGOlFedrHQqGCfB4nuHEOGFibUhFQW7tDssgG_dLJqx9YUzTCPWmXkfbwk62-4kk_0JCwXTeSCF80wgAXZb-L1xMqvH3deTXu4nEKITOziCx-qsxo4doM5tfDnLaTa-Yk918gosQ2bnnw8BGokQoD12Ci2v7CCpdFTnKz1wLth4cOPEDctJqouTtvZde2Oz8BO4bpgnQH8k_jLV1DnZE2u9zCj-1tAmNUUQr5fKwawsK6vRJ0vRUbk="
+        }
+        // 다음 상품 추가 시 여기에 { ... } 복사
+    ];
+
+    function render() {
+        const grid = document.getElementById('linksGrid');
+        grid.innerHTML = linksData.map(item => `
+            <div class="link-card">
+                <a href="${item.productUrl}" target="_blank" rel="noopener">
+                    <div class="img-box">
+                        <img src="${item.productImage}" alt="${item.productName}" referrerpolicy="no-referrer">
                     </div>
-                    <img src="${item.impressionUrl}" class="imp-pixel">
+                </a>
+                <div class="info-box">
+                    <span class="category">${item.categoryName}</span>
+                    <div class="name">${item.productName}</div>
+                    <div class="price-row">
+                        <span class="price">${item.productPrice.toLocaleString()}원</span>
+                        ${item.isRocket ? '<img src="https://image6.coupangcdn.com/image/badges/rocket/rocket_logo.png" class="rocket">' : ''}
+                    </div>
+                    <a href="${item.productUrl}" target="_blank" class="buy-btn">최저가 확인하기</a>
                 </div>
-            `).join('');
-        })
-        .catch(err => console.error("데이터 로드 실패:", err));
+                <img src="${item.impressionUrl}" class="pixel">
+            </div>
+        `).join('');
+    }
+
+    render();
 </script>
 
 </body>
